@@ -1,0 +1,10 @@
+[{type:"fieldset", name:"data", label:"Microsoft Windows 8", inputWidth:"500", list:[
+		{type: "label", label: "Keys", list:[
+			
+		]},
+		{type: "label", label: "License Documents", list:[
+		 {type:"input",    name: "name", label:"Login"}
+		]},
+		 {type:"button",   name:"save",  value:"Proceed"} 
+       ] 
+ }]
