@@ -5,7 +5,7 @@
 		 {type:"input", width: "200", name: "softwareType", label:"Type"},
 		 {type: "select", width: "200", name: "softwareOS", label: "Operating System", options:[
             {text: "", value: "none"},
-            {text: "Windows", value: "windows"},
+            {text: "Windows", value: "windows", selected : "true" },
             {text: "OSX", value: "osx"},
             {text: "Linux", value: "linux"}
         ]},

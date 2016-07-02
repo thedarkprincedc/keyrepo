@@ -44,6 +44,7 @@
 			return $retArr;
 		}
 		function deleteKey($request){
+			
 			$retArr = new stdClass();
 			$id = (!empty($request["id"]))?$request["id"]:null;
 			if($stmt = $this->pdo->prepare("DELETE FROM `keyrepo.keys` WHERE id = ?")){
@@ -58,18 +59,22 @@
 			$os = (!empty($request["os"]))?$request["os"]:null;
 			$type = (!empty($request["type"]))?$request["type"]:null;
 			$manufacturer = (!empty($request["manufacturer"]))?$request["manufacturer"]:null;
+			$id = (!empty($request["id"]))?$request["id"]:null;
 			
 			$retArr = new stdClass();
 			$whereClause = "";
 			if($type && $type !== "a1"){
 				$whereClause = "type = '{$type}'";
 			}
+			if($id){
+				$whereClause = "id = '{$id}'";
+			}
 			$whereClause = (strlen($whereClause)>0) ? "WHERE {$whereClause}" : "";
 			if($stmt = $this->pdo->query("SELECT * FROM `keyrepo.keys` {$whereClause}")){
 				foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $key => $value) {
 					$retObj = new stdClass();
 					$retObj->id = $value["id"];
-					$retObj->data = array($value["name"],$value["company"],$value["type"],($value["expires"]=="0000-00-00")?"never":$value["expires"]);
+					$retObj->data = array($value["name"],$value["company"],$value["type"],$value["os"],($value["expires"]=="0000-00-00")?"never":$value["expires"]);
 					$retArr->rows[] = $retObj;
 				}
 			}

@@ -23,6 +23,9 @@ try {
 		case "addkey":
 			$retArr = $keyrepo -> addKey($request_arr);
 			break;
+		case "deletekey":
+			$retArr = $keyrepo -> deleteKey($request);
+			break;
 	}
 	print(json_encode($retArr, JSON_PRETTY_PRINT));
 } catch(PDOException $e) {

@@ -1,56 +1,5 @@
 function doOnLoad() {
 	mainApplication();
-	/*
-
-	var toolbar = sideBar.cells().attachToolbar({
-	items : [{
-	id : "new",
-	type : "button",
-	text : "New"
-	}, {
-	id : "mod",
-	type : "button",
-	text : "Modify"
-	}, {
-	id : "delete",
-	type : "button",
-	text : "Delete"
-	}]
-	});
-	toolbar.attachEvent("onClick", function(id) {
-	if (id == "new") {
-	var w2 = myLayout.dhxWins.createWindow("w2", 1, 1, 500, 300);
-	w2.setModal(true);
-	}
-	if (id == "mod") {
-	var w2 = myLayout.dhxWins.createWindow("w2", 1, 1, 500, 300);
-	w2.setModal(true);
-	}
-	if(id == "delete"){
-
-	}
-	});
-	sideBar.attachEvent("onSelect", function(id, lastId) {
-	mygrid.clearAll();
-	mygrid.load("php/keyrepoapp.php?action=search&type="+id,"json");
-	//sideBar.cells().showView("def");
-	});
-	sideBar.loadStruct("php/keyrepoapp.php?action=getsoftwaretypes", function() {
-
-	});
-
-	var mygrid = sideBar.cells().attachGrid();
-	mygrid.setHeader("Name,Manufacturer,Type,Expires");
-	mygrid.init();
-	mygrid.load("php/keyrepoapp.php?action=search", "json");
-	mygrid.attachEvent("onRowSelect", function(id, lastId) {
-
-	var myForm = sideBar.cells().attachForm();
-	myForm.loadStruct("js/forms/keydetails.json", "json");
-	});
-
-	*/
-	//sideBar.cells().progressOn();
 }
 
 var mainApplication = function() {
@@ -95,16 +44,30 @@ var mainApplication = function() {
 				keys : ["99mr9md9rm9kdr9", "jm99k9ik9irk9ikr9"]
 			});
 		}.bind(this));
+		mygrid.attachEvent("onRowSelect", function(id, lastId) {
+			
+		}.bind(this));
 	};
-	this.createNewForm = function(){
+	this.createNewForm = function(modObj){
 		myForm = subLayout.cells("a").attachForm();
-		myForm.loadStruct("js/forms/new_keyform.json", "json");
+		myForm.loadStruct("js/forms/new_keyform.json", function(){
+			if(modObj){
+				debugger;
+				myForm.setFormData({
+							"softwareName" : modObj.rows[0].data[0], 
+							"softwareType" : modObj.rows[0].data[2], 
+							"softwareOS" : modObj.rows[0].data[3]
+							}
+						);
+			}
+			
+		});
+		
 		myForm.attachEvent("onButtonClick", function(id){
-				//if (id == "set1") myForm.load("php/data.php?id=1");
-				//if (id == "set2") myForm.load("php/data.php?id=2");
-				//if (id == "set3") myForm.load("php/data.php?id=5");
 				if (id == "save") myForm.save();
 		});
+	
+					
 		var dp = new dataProcessor("php/keyrepoapp.php?action=addkey");
 		dp.init(myForm);
 		dp.setTransactionMode("REST");
@@ -136,6 +99,7 @@ var mainApplication = function() {
 		       
 		    ]
 		}, "json");
+		return myForm;
 	};
 	this.init = function() {
 		myLayout = new dhtmlXLayoutObject({
@@ -181,8 +145,24 @@ var mainApplication = function() {
 		toolbar.attachEvent("onClick", function(id) {
 			if (id == "new") {
 				this.createNewForm();
-				//var w2 = myLayout.dhxWins.createWindow("w2", 1, 1, 500, 300);
-				//w2.setModal(true);
+			}
+			if (id == "delete") {
+				$.post("./php/keyrepoapp.php?action=deletekey", {id : mygrid.getSelectedRowId() },function(msg){
+					this.createGrid("");
+				}.bind(this));
+			}
+			if (id == "mod") {
+				var idGridRef;
+				if(idGridRef = mygrid.getSelectedRowId()){
+					$.post("php/keyrepoapp.php?action=search", {id : mygrid.getSelectedRowId() },function(msg){
+						this.createNewForm(msg);
+					}.bind(this));
+					
+					//var trr = myForm.getFormData(false);
+					//debugger;
+					//myForm.load("php/keyrepoapp.php?action=search&id="+idGridRef);
+				}
+				
 			}
 		}.bind(this));
 		this.createGrid("");
