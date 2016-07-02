@@ -28,6 +28,30 @@
 			$retArr->items[] = $itemObj;
 			return $retArr;
 		}
+		function addKey($request){
+			$retArr = new stdClass();
+			if($stmt = $this->pdo->prepare("INSERT INTO `keyrepo.keys` (name, type, os, keyinfo, company) VALUES (?,?,?,?,?)")){
+				$stmt->execute(array(
+							$request[softwareName],
+						    $request[softwareType],
+						    $request[softwareOS],
+						    $request[softwareKey],
+						    "kmfjmrjmjfmjm"
+							)
+				);
+				$retArr->status = "ok";
+			}
+			return $retArr;
+		}
+		function deleteKey($request){
+			$retArr = new stdClass();
+			$id = (!empty($request["id"]))?$request["id"]:null;
+			if($stmt = $this->pdo->prepare("DELETE FROM `keyrepo.keys` WHERE id = ?")){
+				$stmt->execute(array($id));
+				$retArr->status = "ok";
+			}
+			return $retArr;
+		}
 		function search($request){
 			$query = (!empty($request["q"]))?$request["q"]:null;
 			$name = (!empty($request["name"]))?$request["name"]:null;
@@ -45,13 +69,10 @@
 				foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $key => $value) {
 					$retObj = new stdClass();
 					$retObj->id = $value["id"];
-					$retObj->data = array($value["name"],$value["company"],$value["type"],"wvwewecewcewc");
+					$retObj->data = array($value["name"],$value["company"],$value["type"],($value["expires"]=="0000-00-00")?"never":$value["expires"]);
 					$retArr->rows[] = $retObj;
 				}
 			}
-	
-			
-			
 			return $retArr;
 		}
 		

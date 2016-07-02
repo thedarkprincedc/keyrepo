@@ -1,0 +1,16 @@
+[{type:"fieldset", name:"data", label:"Create New Key Entry", inputWidth:"400", list:[
+{type:"settings",position:"label-left",labelWidth:120,inputWidth:120,
+       labelAlign:"right"},
+		 {type:"input", width: "200", name: "softwareName", label:"Software Name"},
+		 {type:"input", width: "200", name: "softwareType", label:"Type"},
+		 {type: "select", width: "200", name: "softwareOS", label: "Operating System", options:[
+            {text: "", value: "none"},
+            {text: "Windows", value: "windows"},
+            {text: "OSX", value: "osx"},
+            {text: "Linux", value: "linux"}
+        ]},
+        {type: "input", name: "softwareKey", label: "Key Details", rows:3, style:"width:200px;height:90px;"},
+		  {type:"calendar", width: "200", name: "softwareDate", name: "key", label:"Expires"},
+		 {type:"button",   name:"save",  value:"Save"} 
+       ] 
+ }]
